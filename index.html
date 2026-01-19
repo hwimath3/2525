@@ -3,550 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원과 직선의 극한 - 10단계 변형문제</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>함수의 극한: 직선과 원의 교점 마스터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .progress-container {
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 5px;
-            margin-bottom: 20px;
-        }
-
-        .progress-bar {
-            height: 20px;
-            background: linear-gradient(90deg, #00f260, #0575e6);
-            border-radius: 15px;
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-
-        .quiz-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .step-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .difficulty {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            margin-left: 10px;
-        }
-
-        .difficulty.easy { background: #d4edda; color: #155724; }
-        .difficulty.medium { background: #fff3cd; color: #856404; }
-        .difficulty.hard { background: #f8d7da; color: #721c24; }
-
-        .problem-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #333;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .options {
-            display: grid;
-            gap: 12px;
-        }
-
-        .option {
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        .option:hover {
-            border-color: #667eea;
-            background: #f0f0ff;
-        }
-
-        .option.selected {
-            border-color: #667eea;
-            background: #e8e8ff;
-        }
-
-        .option.correct {
-            border-color: #28a745;
-            background: #d4edda;
-        }
-
-        .option.incorrect {
-            border-color: #dc3545;
-            background: #f8d7da;
-        }
-
-        .option-label {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #667eea;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-weight: bold;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .solution {
-            margin-top: 20px;
-            padding: 20px;
-            background: #e8f4f8;
-            border-radius: 10px;
-            border-left: 4px solid #17a2b8;
-            display: none;
-        }
-
-        .solution.show {
-            display: block;
-        }
-
-        .solution h4 {
-            color: #17a2b8;
-            margin-bottom: 10px;
-        }
-
-        .result-card {
-            text-align: center;
-            display: none;
-        }
-
-        .result-card.show {
-            display: block;
-        }
-
-        .score-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 3rem;
-            font-weight: bold;
-        }
-
-        .score-circle span {
-            font-size: 1rem;
-        }
-
-        .result-message {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .concept-box {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .concept-box h4 {
-            color: #856404;
-            margin-bottom: 10px;
-        }
-
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 1.5rem;
-            }
-
-            .quiz-card {
-                padding: 20px;
-            }
-
-            .problem-text {
-                font-size: 1rem;
-            }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .math-display { font-size: 1.1rem; margin: 1.5rem 0; padding: 1.2rem; background-color: #ffffff; border-left: 4px solid #3b82f6; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow-x: auto; }
+        .concept-box { background-color: #eff6ff; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #dbeafe; }
+        .option-label { transition: all 0.2s; cursor: pointer; display: block; }
+        .option-label:hover { background-color: #eff6ff; transform: translateY(-2px); border-color: #3b82f6; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>원과 직선의 극한</h1>
-            <p>10단계 변형문제 퀴즈</p>
-        </header>
+<body class="p-4 sm:p-8 md:p-12 text-slate-800">
+    <div id="app" class="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl p-6 sm:p-10 border border-slate-100">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-center text-slate-900 mb-2">함수의 극한</h1>
+        <p class="text-center text-slate-500 mb-8">직선과 원의 교점 극한 마스터 10단계</p>
 
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar" style="width: 10%">1 / 10</div>
-        </div>
-
-        <div class="quiz-card" id="quizCard">
-            <div id="problemContainer"></div>
-            <div class="options" id="optionsContainer"></div>
-            <button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()" disabled>정답 확인</button>
-            <button class="btn btn-primary hidden" id="nextBtn" onclick="nextProblem()">다음 문제</button>
-            <div class="solution" id="solution"></div>
-        </div>
-
-        <div class="quiz-card result-card" id="resultCard">
-            <div class="score-circle">
-                <div id="finalScore">0</div>
-                <span>/ 10</span>
+        <div id="page-study" class="page active">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b pb-2">핵심 원리</h2>
+            <div class="concept-box">
+                <h3 class="text-xl font-bold text-blue-600 mb-3">직선과 원의 교점</h3>
+                <p class="text-slate-700 mb-2">두 점을 지나는 직선과 원의 교점을 구하고, 수선의 발을 이용합니다.</p>
+                <div class="math-display">$$ \text{원} \ x^2 + y^2 = 4 \text{와 직선의 교점} $$</div>
             </div>
-            <div class="result-message" id="resultMessage"></div>
-            <button class="btn btn-primary" onclick="restartQuiz()">다시 풀기</button>
+            <div class="concept-box bg-amber-50 border-amber-200">
+                <h3 class="text-xl font-bold text-amber-600 mb-3">오늘의 문제</h3>
+                <p class="text-slate-700">다음 그림과 같이 두 점 A$(0, t)$ ($t > 0$), B$(-2, 0)$을 지나는 직선과 원 $x^2 + y^2 = 4$의 교점 중에서 B가 아닌 점을 P라 하고, 점 P에서 $x$축에 내린 수선의 발을 H라고 할 때,</p>
+                <div class="math-display border-amber-400">$$ \lim_{t \to \infty} (\overline{OA} \cdot \overline{PH}) \text{를 구하시오.} $$</div>
+            </div>
+            <div class="mt-8 mb-4">
+                <label for="username-input" class="block text-sm font-medium text-slate-600 mb-1">학생 이름</label>
+                <input type="text" id="username-input" placeholder="이름을 입력하세요" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition shadow-sm outline-none">
+            </div>
+            <button onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl mt-2 transition duration-300 shadow-lg transform hover:scale-[1.01]">문제 풀이 시작하기</button>
+        </div>
+
+        <div id="page-quiz" class="page">
+            <div id="quiz-header" class="mb-6">
+                <div class="flex justify-between items-end mb-2"><span class="text-lg font-bold text-blue-700">Step <span id="current-q-number">1</span></span><span class="text-sm text-slate-400">Total 10 Questions</span></div>
+                <div class="w-full bg-slate-100 rounded-full h-2"><div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div></div>
+            </div>
+            <div id="question-area" class="min-h-[250px] p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                <p id="question-text" class="text-xl font-medium text-slate-800 mb-8 leading-relaxed"></p>
+                <div id="options-container" class="space-y-3"></div>
+            </div>
+            <div id="feedback" class="mt-6 p-4 rounded-xl text-white font-semibold hidden"></div>
+            <div class="flex gap-3 mt-8">
+                <button onclick="prevQuestion()" id="prev-btn" class="hidden px-6 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-4 rounded-xl transition shadow-sm">이전</button>
+                <button onclick="submitAnswer()" id="submit-btn" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition shadow-md">정답 확인</button>
+                <button onclick="nextQuestion()" id="next-btn" class="hidden flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition shadow-md">다음 단계</button>
+            </div>
+        </div>
+
+        <div id="page-results" class="page text-center p-8">
+            <div class="mb-6 text-6xl animate-pulse">🏆</div>
+            <h2 class="text-3xl font-extrabold text-slate-800 mb-2">학습 완료!</h2>
+            <div class="text-7xl font-black text-blue-600 my-8"><span id="final-score">0</span><span class="text-3xl text-slate-400">/10</span></div>
+            <div id="upload-status" class="text-sm text-slate-500 mb-8 h-6 font-medium">결과 저장 중...</div>
+            <button onclick="window.location.reload()" class="bg-white border-2 border-slate-900 text-slate-900 hover:bg-slate-50 font-bold py-3 px-8 rounded-xl transition shadow-sm">다시 도전하기</button>
         </div>
     </div>
 
     <script>
-        const problems = [
-            {
-                step: 1,
-                difficulty: "easy",
-                concept: "기본 개념: 원과 직선의 교점, 극한의 기초",
-                problem: `두 점 \\(A(0, t)\\) (\\(t > 0\\)), \\(B(-2, 0)\\)을 지나는 직선의 방정식을 구하시오.`,
-                options: [
-                    `\\(y = \\frac{t}{2}(x + 2)\\)`,
-                    `\\(y = \\frac{t}{2}x + t\\)`,
-                    `\\(y = \\frac{2}{t}(x + 2)\\)`,
-                    `\\(y = tx + 2t\\)`
-                ],
-                answer: 0,
-                solution: `두 점 \\(A(0, t)\\), \\(B(-2, 0)\\)을 지나는 직선의 기울기는 \\(\\frac{t - 0}{0 - (-2)} = \\frac{t}{2}\\)입니다.<br><br>점-기울기 형태로 쓰면: \\(y - 0 = \\frac{t}{2}(x - (-2))\\)<br><br>따라서 \\(y = \\frac{t}{2}(x + 2)\\)`
-            },
-            {
-                step: 2,
-                difficulty: "easy",
-                concept: "원의 방정식과 직선의 대입",
-                problem: `직선 \\(y = \\frac{t}{2}(x + 2)\\)와 원 \\(x^2 + y^2 = 4\\)의 교점을 구하기 위해 대입하면 어떤 방정식이 되는가?`,
-                options: [
-                    `\\(x^2 + \\frac{t^2}{4}(x+2)^2 = 4\\)`,
-                    `\\(x^2 + t^2(x+2)^2 = 4\\)`,
-                    `\\(x^2 + \\frac{t^2}{2}(x+2)^2 = 4\\)`,
-                    `\\((x+2)^2 + y^2 = 4\\)`
-                ],
-                answer: 0,
-                solution: `\\(y = \\frac{t}{2}(x+2)\\)를 \\(x^2 + y^2 = 4\\)에 대입하면<br><br>\\(x^2 + \\left(\\frac{t}{2}(x+2)\\right)^2 = 4\\)<br><br>\\(x^2 + \\frac{t^2}{4}(x+2)^2 = 4\\)`
-            },
-            {
-                step: 3,
-                difficulty: "medium",
-                concept: "이차방정식의 전개와 정리",
-                problem: `\\(x^2 + \\frac{t^2}{4}(x+2)^2 = 4\\)를 전개하여 정리하면?`,
-                options: [
-                    `\\((4 + t^2)x^2 + 4t^2x + 4t^2 - 16 = 0\\)`,
-                    `\\((4 + t^2)x^2 + 4t^2x + t^2 - 16 = 0\\)`,
-                    `\\((1 + t^2)x^2 + t^2x + t^2 - 4 = 0\\)`,
-                    `\\(4x^2 + t^2x^2 + 4t^2x + 4t^2 = 16\\)`
-                ],
-                answer: 0,
-                solution: `\\(x^2 + \\frac{t^2}{4}(x+2)^2 = 4\\)<br><br>양변에 4를 곱하면: \\(4x^2 + t^2(x+2)^2 = 16\\)<br><br>\\(4x^2 + t^2(x^2 + 4x + 4) = 16\\)<br><br>\\(4x^2 + t^2x^2 + 4t^2x + 4t^2 = 16\\)<br><br>\\((4 + t^2)x^2 + 4t^2x + 4t^2 - 16 = 0\\)`
-            },
-            {
-                step: 4,
-                difficulty: "medium",
-                concept: "근과 계수의 관계",
-                problem: `점 \\(B(-2, 0)\\)가 원 위의 점이므로 \\(x = -2\\)가 방정식의 한 근입니다. 다른 근 \\(x_P\\)를 근과 계수의 관계로 구하면?`,
-                options: [
-                    `\\(x_P = \\frac{4t^2 - 8 - 2t^2}{4 + t^2} = \\frac{2t^2 - 8}{4 + t^2}\\)`,
-                    `\\(x_P = \\frac{4t^2}{4 + t^2} - 2\\)`,
-                    `\\(x_P = \\frac{-4t^2 + 8}{4 + t^2}\\)`,
-                    `\\(x_P = \\frac{8 - 2t^2}{4 + t^2}\\)`
-                ],
-                answer: 3,
-                solution: `근과 계수의 관계에서 두 근의 합은 \\(-\\frac{4t^2}{4+t^2}\\)입니다.<br><br>\\((-2) + x_P = -\\frac{4t^2}{4+t^2}\\)<br><br>\\(x_P = -\\frac{4t^2}{4+t^2} + 2 = \\frac{-4t^2 + 2(4+t^2)}{4+t^2}\\)<br><br>\\(= \\frac{-4t^2 + 8 + 2t^2}{4+t^2} = \\frac{8 - 2t^2}{4+t^2}\\)`
-            },
-            {
-                step: 5,
-                difficulty: "medium",
-                concept: "점 P의 좌표 계산",
-                problem: `점 \\(P\\)의 \\(y\\) 좌표를 구하시오. (단, \\(x_P = \\frac{8-2t^2}{4+t^2}\\))`,
-                options: [
-                    `\\(y_P = \\frac{4t + t^3}{4+t^2}\\)`,
-                    `\\(y_P = \\frac{8t}{4+t^2}\\)`,
-                    `\\(y_P = \\frac{2t(4+t^2)}{4+t^2}\\)`,
-                    `\\(y_P = \\frac{t(8-2t^2)}{4+t^2}\\)`
-                ],
-                answer: 1,
-                solution: `\\(y_P = \\frac{t}{2}(x_P + 2)\\)<br><br>\\(= \\frac{t}{2}\\left(\\frac{8-2t^2}{4+t^2} + 2\\right)\\)<br><br>\\(= \\frac{t}{2} \\cdot \\frac{8-2t^2 + 2(4+t^2)}{4+t^2}\\)<br><br>\\(= \\frac{t}{2} \\cdot \\frac{8-2t^2 + 8 + 2t^2}{4+t^2}\\)<br><br>\\(= \\frac{t}{2} \\cdot \\frac{16}{4+t^2} = \\frac{8t}{4+t^2}\\)`
-            },
-            {
-                step: 6,
-                difficulty: "medium",
-                concept: "수선의 발 좌표",
-                problem: `점 \\(P\\)에서 \\(x\\)축에 내린 수선의 발 \\(H\\)의 좌표는?`,
-                options: [
-                    `\\(H\\left(\\frac{8-2t^2}{4+t^2}, \\frac{8t}{4+t^2}\\right)\\)`,
-                    `\\(H\\left(\\frac{8-2t^2}{4+t^2}, 0\\right)\\)`,
-                    `\\(H\\left(0, \\frac{8t}{4+t^2}\\right)\\)`,
-                    `\\(H(0, 0)\\)`
-                ],
-                answer: 1,
-                solution: `수선의 발 \\(H\\)는 점 \\(P\\)에서 \\(x\\)축에 수직으로 내린 점입니다.<br><br>따라서 \\(H\\)의 \\(x\\) 좌표는 \\(P\\)와 같고, \\(y\\) 좌표는 0입니다.<br><br>\\(H\\left(\\frac{8-2t^2}{4+t^2}, 0\\right)\\)`
-            },
-            {
-                step: 7,
-                difficulty: "medium",
-                concept: "길이 계산 (OA, PH)",
-                problem: `\\(\\overline{OA}\\)와 \\(\\overline{PH}\\)의 길이를 각각 구하시오.`,
-                options: [
-                    `\\(OA = t\\), \\(PH = \\frac{8t}{4+t^2}\\)`,
-                    `\\(OA = t^2\\), \\(PH = \\frac{8t^2}{4+t^2}\\)`,
-                    `\\(OA = 2t\\), \\(PH = \\frac{4t}{4+t^2}\\)`,
-                    `\\(OA = t\\), \\(PH = \\frac{8}{4+t^2}\\)`
-                ],
-                answer: 0,
-                solution: `\\(\\overline{OA}\\)는 원점 \\(O(0,0)\\)에서 \\(A(0,t)\\)까지의 거리이므로 \\(OA = t\\)입니다.<br><br>\\(\\overline{PH}\\)는 \\(P\\)에서 \\(x\\)축까지의 거리, 즉 \\(P\\)의 \\(y\\) 좌표의 절댓값입니다.<br><br>\\(t > 0\\)일 때 \\(y_P > 0\\)이므로 \\(PH = \\frac{8t}{4+t^2}\\)`
-            },
-            {
-                step: 8,
-                difficulty: "hard",
-                concept: "곱의 계산",
-                problem: `\\(\\overline{OA} \\cdot \\overline{PH}\\)를 계산하시오.`,
-                options: [
-                    `\\(\\frac{8t^2}{4+t^2}\\)`,
-                    `\\(\\frac{8t}{4+t^2}\\)`,
-                    `\\(\\frac{4t^2}{4+t^2}\\)`,
-                    `\\(\\frac{16t^2}{4+t^2}\\)`
-                ],
-                answer: 0,
-                solution: `\\(\\overline{OA} \\cdot \\overline{PH} = t \\cdot \\frac{8t}{4+t^2} = \\frac{8t^2}{4+t^2}\\)`
-            },
-            {
-                step: 9,
-                difficulty: "hard",
-                concept: "극한 계산 준비",
-                problem: `\\(\\frac{8t^2}{4+t^2}\\)를 \\(t \\to \\infty\\)일 때 계산하기 위해 분자, 분모를 \\(t^2\\)으로 나누면?`,
-                options: [
-                    `\\(\\frac{8}{\\frac{4}{t^2}+1}\\)`,
-                    `\\(\\frac{8}{4+t^2}\\)`,
-                    `\\(\\frac{8t^2}{4}\\)`,
-                    `\\(\\frac{8}{t^2+4}\\)`
-                ],
-                answer: 0,
-                solution: `\\(\\frac{8t^2}{4+t^2} = \\frac{\\frac{8t^2}{t^2}}{\\frac{4+t^2}{t^2}} = \\frac{8}{\\frac{4}{t^2}+1}\\)`
-            },
-            {
-                step: 10,
-                difficulty: "hard",
-                concept: "극한값 계산",
-                problem: `\\(\\displaystyle\\lim_{t \\to \\infty} \\overline{OA} \\cdot \\overline{PH}\\)의 값은?`,
-                options: [
-                    `4`,
-                    `8`,
-                    `2`,
-                    `16`
-                ],
-                answer: 1,
-                solution: `\\(\\displaystyle\\lim_{t \\to \\infty} \\frac{8t^2}{4+t^2} = \\lim_{t \\to \\infty} \\frac{8}{\\frac{4}{t^2}+1}\\)<br><br>\\(t \\to \\infty\\)일 때 \\(\\frac{4}{t^2} \\to 0\\)이므로<br><br>\\(= \\frac{8}{0+1} = 8\\)<br><br><strong>정답: 8</strong>`
-            }
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzB5ALdepM0Tu4II9BeHGDAdaC0qd2OXJp6Ofubwjc2FZ5f1aChz9ZCb1lBxkp12Xy2/exec';
+        let currentQuestionIndex = 0, userName = "", userAnswers = [];
+
+        const questions = [
+            { q: "점 A$(0, t)$와 점 B$(-2, 0)$을 지나는 직선의 방정식은?", options: ["$y = \\frac{t}{2}(x + 2)$", "$y = \\frac{t}{2}x + t$", "$y = -\\frac{t}{2}(x - 2)$", "$y = tx + 2$"], ans: "$y = \\frac{t}{2}(x + 2)$", exp: "기울기 $= \\frac{t - 0}{0 - (-2)} = \\frac{t}{2}$, $y - 0 = \\frac{t}{2}(x + 2)$" },
+            { q: "$\\overline{OA}$의 값은?", options: ["$t$", "$\\sqrt{t}$", "$t^2$", "$2t$"], ans: "$t$", exp: "A$(0, t)$이므로 원점에서의 거리는 $t$" },
+            { q: "직선 $y = \\frac{t}{2}(x+2)$와 원 $x^2 + y^2 = 4$의 교점을 구하기 위해 대입하면?", options: ["$x^2 + \\frac{t^2}{4}(x+2)^2 = 4$", "$x^2 + t(x+2) = 4$", "$(x+2)^2 + y^2 = 4$", "$\\frac{t^2}{4}x^2 + y^2 = 4$"], ans: "$x^2 + \\frac{t^2}{4}(x+2)^2 = 4$", exp: "$y = \\frac{t}{2}(x+2)$를 원의 방정식에 대입" },
+            { q: "위 방정식을 전개하여 정리하면 $(4 + t^2)x^2 + 4t^2x + 4t^2 - 16 = 0$. B$(-2, 0)$이 한 근이므로 다른 근 $x_P$는?", options: ["$x_P = \\frac{4 - t^2}{4 + t^2} \\cdot 2$", "$x_P = \\frac{2(4 - t^2)}{4 + t^2}$", "$x_P = \\frac{-4t^2}{4 + t^2} + 2$", "$x_P = 2 - \\frac{8}{4+t^2}$"], ans: "$x_P = \\frac{2(4 - t^2)}{4 + t^2}$", exp: "근과 계수의 관계: $-2 + x_P = -\\frac{4t^2}{4+t^2}$에서 $x_P = \\frac{2(4-t^2)}{4+t^2}$" },
+            { q: "점 P의 $y$ 좌표 $y_P = \\frac{t}{2}(x_P + 2)$를 계산하면?", options: ["$y_P = \\frac{8t}{4 + t^2}$", "$y_P = \\frac{4t}{4 + t^2}$", "$y_P = \\frac{2t}{4 + t^2}$", "$y_P = \\frac{t}{4 + t^2}$"], ans: "$y_P = \\frac{8t}{4 + t^2}$", exp: "$x_P + 2 = \\frac{2(4-t^2) + 2(4+t^2)}{4+t^2} = \\frac{16}{4+t^2}$이므로 $y_P = \\frac{t}{2} \\cdot \\frac{16}{4+t^2} = \\frac{8t}{4+t^2}$" },
+            { q: "$\\overline{PH}$는 점 P의 $y$ 좌표의 절댓값입니다. $t \\to \\infty$일 때 $\\overline{PH} = \\frac{8t}{4+t^2}$의 극한은?", options: ["$0$", "$8$", "$\\frac{8}{t}$", "$1$"], ans: "$0$", exp: "$\\frac{8t}{4+t^2} = \\frac{8/t}{4/t^2 + 1} \\to 0$ as $t \\to \\infty$" },
+            { q: "$\\overline{OA} \\cdot \\overline{PH} = t \\cdot \\frac{8t}{4+t^2} = \\frac{8t^2}{4+t^2}$의 극한을 구하면?", options: ["$8$", "$4$", "$2$", "$0$"], ans: "$8$", exp: "$\\frac{8t^2}{4+t^2} = \\frac{8}{4/t^2 + 1} \\to 8$ as $t \\to \\infty$" },
+            { q: "**[검증]** $t = 10$일 때 $\\overline{OA} \\cdot \\overline{PH}$의 근사값은?", options: ["약 $7.69$", "약 $8$", "약 $6$", "약 $10$"], ans: "약 $7.69$", exp: "$\\frac{8 \\times 100}{4 + 100} = \\frac{800}{104} \\approx 7.69$" },
+            { q: "**[유사]** 원의 반지름이 $r$일 때 $\\lim_{t \\to \\infty}(\\overline{OA} \\cdot \\overline{PH})$은?", options: ["$2r^2$", "$r^2$", "$4r$", "$r$"], ans: "$2r^2$", exp: "반지름 $r$인 원에서는 $2r^2$이 됩니다. $r=2$일 때 $2 \\times 4 = 8$" },
+            { q: "**[최종]** 원래 문제의 정답은?", options: ["$4$", "$6$", "$8$", "$10$"], ans: "$8$", exp: "$\\lim_{t \\to \\infty}(\\overline{OA} \\cdot \\overline{PH}) = 8$" }
         ];
 
-        let currentProblem = 0;
-        let score = 0;
-        let selectedOption = null;
-
-        function renderProblem() {
-            const problem = problems[currentProblem];
-            const container = document.getElementById('problemContainer');
-            const optionsContainer = document.getElementById('optionsContainer');
-
-            container.innerHTML = `
-                <span class="step-badge">STEP ${problem.step}</span>
-                <span class="difficulty ${problem.difficulty}">${problem.difficulty === 'easy' ? '기초' : problem.difficulty === 'medium' ? '보통' : '심화'}</span>
-                <div class="concept-box">
-                    <h4>핵심 개념</h4>
-                    <p>${problem.concept}</p>
-                </div>
-                <div class="problem-text">${problem.problem}</div>
-            `;
-
-            optionsContainer.innerHTML = problem.options.map((opt, idx) => `
-                <div class="option" onclick="selectOption(${idx})" id="option${idx}">
-                    <span class="option-label">${idx + 1}</span>
-                    <span>${opt}</span>
-                </div>
-            `).join('');
-
-            document.getElementById('submitBtn').disabled = true;
-            document.getElementById('submitBtn').classList.remove('hidden');
-            document.getElementById('nextBtn').classList.add('hidden');
-            document.getElementById('solution').classList.remove('show');
-            selectedOption = null;
-
-            // Re-render MathJax
-            MathJax.typesetPromise();
-        }
-
-        function selectOption(idx) {
-            if (document.getElementById('solution').classList.contains('show')) return;
-
-            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-            document.getElementById(`option${idx}`).classList.add('selected');
-            selectedOption = idx;
-            document.getElementById('submitBtn').disabled = false;
-        }
-
-        function checkAnswer() {
-            const problem = problems[currentProblem];
-            const isCorrect = selectedOption === problem.answer;
-
-            document.querySelectorAll('.option').forEach((opt, idx) => {
-                if (idx === problem.answer) {
-                    opt.classList.add('correct');
-                } else if (idx === selectedOption && !isCorrect) {
-                    opt.classList.add('incorrect');
-                }
-            });
-
-            if (isCorrect) score++;
-
-            document.getElementById('solution').innerHTML = `
-                <h4>${isCorrect ? '정답입니다!' : '오답입니다.'}</h4>
-                <p>${problem.solution}</p>
-            `;
-            document.getElementById('solution').classList.add('show');
-
-            document.getElementById('submitBtn').classList.add('hidden');
-            document.getElementById('nextBtn').classList.remove('hidden');
-
-            if (currentProblem === problems.length - 1) {
-                document.getElementById('nextBtn').textContent = '결과 보기';
-            }
-
-            MathJax.typesetPromise();
-        }
-
-        function nextProblem() {
-            currentProblem++;
-
-            if (currentProblem >= problems.length) {
-                showResult();
-                return;
-            }
-
-            document.getElementById('progressBar').style.width = `${(currentProblem + 1) * 10}%`;
-            document.getElementById('progressBar').textContent = `${currentProblem + 1} / 10`;
-
-            renderProblem();
-        }
-
-        function showResult() {
-            document.getElementById('quizCard').style.display = 'none';
-            document.getElementById('resultCard').classList.add('show');
-            document.getElementById('finalScore').textContent = score;
-
-            let message = '';
-            if (score === 10) message = '완벽합니다! 극한과 도형 문제의 달인이시네요!';
-            else if (score >= 8) message = '훌륭합니다! 개념을 잘 이해하고 계시네요.';
-            else if (score >= 6) message = '좋습니다! 조금만 더 연습하면 완벽해질 거예요.';
-            else if (score >= 4) message = '기초 개념을 다시 복습해보세요.';
-            else message = '개념 정리가 필요합니다. 차근차근 다시 공부해봐요!';
-
-            document.getElementById('resultMessage').textContent = message;
-        }
-
-        function restartQuiz() {
-            currentProblem = 0;
-            score = 0;
-            document.getElementById('quizCard').style.display = 'block';
-            document.getElementById('resultCard').classList.remove('show');
-            document.getElementById('progressBar').style.width = '10%';
-            document.getElementById('progressBar').textContent = '1 / 10';
-            document.getElementById('nextBtn').textContent = '다음 문제';
-            renderProblem();
-        }
-
-        // Initialize
-        renderProblem();
+        userAnswers = new Array(questions.length).fill(null);
+        function renderMath(element) { renderMathInElement(element || document.body, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}], throwOnError: false }); }
+        function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function startQuiz() { userName = document.getElementById('username-input').value.trim(); if (!userName) return alert("이름을 입력해주세요!"); showPage('page-quiz'); loadQuestion(); }
+        function loadQuestion() { const q = questions[currentQuestionIndex]; document.getElementById('current-q-number').textContent = currentQuestionIndex + 1; document.getElementById('question-text').innerHTML = q.q; document.getElementById('progress-bar').style.width = `${(currentQuestionIndex / questions.length) * 100}%`; const optContainer = document.getElementById('options-container'), prevBtn = document.getElementById('prev-btn'), submitBtn = document.getElementById('submit-btn'), nextBtn = document.getElementById('next-btn'), feedbackDiv = document.getElementById('feedback'); optContainer.innerHTML = ''; const existingAnswer = userAnswers[currentQuestionIndex]; q.options.forEach(opt => { const label = document.createElement('label'); label.className = "option-label block p-4 bg-white border border-slate-200 rounded-xl shadow-sm"; const isChecked = existingAnswer && existingAnswer.selected === opt; label.innerHTML = `<div class="flex items-center"><input type="radio" name="quiz-opt" value="${opt}" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500 mr-3" ${isChecked ? 'checked' : ''} ${existingAnswer ? 'disabled' : ''}><span class="text-lg ${existingAnswer ? 'text-slate-600' : ''}">${opt}</span></div>`; optContainer.appendChild(label); }); prevBtn.classList.toggle('hidden', currentQuestionIndex === 0); if (existingAnswer) { showFeedbackUI(existingAnswer.isCorrect, q.ans, q.exp); submitBtn.classList.add('hidden'); nextBtn.classList.remove('hidden'); } else { feedbackDiv.classList.add('hidden'); submitBtn.classList.remove('hidden'); nextBtn.classList.add('hidden'); } renderMath(document.getElementById('question-area')); }
+        function showFeedbackUI(isCorrect, ans, exp) { const fb = document.getElementById('feedback'); fb.classList.remove('hidden'); fb.className = `mt-6 p-5 rounded-xl text-white shadow-lg ${isCorrect ? 'bg-emerald-500' : 'bg-rose-500'}`; fb.innerHTML = `<div class="flex items-center mb-2"><span class="text-2xl mr-2">${isCorrect ? '🎉' : '❌'}</span><span class="text-lg font-bold">${isCorrect ? "정답입니다!" : "아쉽네요."}</span></div>${!isCorrect ? `<div class="mb-2">정답: <strong>${ans}</strong></div>` : ''}<div class="text-sm font-normal opacity-90 border-t border-white/20 pt-2 mt-2 leading-relaxed">${exp}</div>`; renderMath(fb); }
+        function submitAnswer() { const selected = document.querySelector('input[name="quiz-opt"]:checked'); if (!selected) return alert("보기를 선택해주세요!"); const q = questions[currentQuestionIndex]; const clean = (s) => s.replace(/\s/g, ''); const isCorrect = clean(selected.value) === clean(q.ans); userAnswers[currentQuestionIndex] = { selected: selected.value, isCorrect: isCorrect }; showFeedbackUI(isCorrect, q.ans, q.exp); document.querySelectorAll('input[name="quiz-opt"]').forEach(r => r.disabled = true); document.getElementById('submit-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
+        function prevQuestion() { if (currentQuestionIndex > 0) { currentQuestionIndex--; loadQuestion(); } }
+        function nextQuestion() { currentQuestionIndex++; if (currentQuestionIndex < questions.length) { loadQuestion(); } else { finishQuiz(); } }
+        function finishQuiz() { showPage('page-results'); const finalScore = userAnswers.filter(a => a && a.isCorrect).length; const scoreDisplay = document.getElementById('final-score'); let currentDisplayScore = 0; const interval = setInterval(() => { if (currentDisplayScore >= finalScore) { clearInterval(interval); scoreDisplay.textContent = finalScore; } else { currentDisplayScore++; scoreDisplay.textContent = currentDisplayScore; } }, 100); if(finalScore === 0) scoreDisplay.textContent = 0; sendResult(finalScore); }
+        function sendResult(finalScore) { const status = document.getElementById('upload-status'); const data = { name: userName, score: finalScore, quizTitle: "2525-직선원교점극한", date: new Date().toLocaleString() }; fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).then(() => { status.textContent = "결과가 안전하게 저장되었습니다."; status.classList.replace('text-slate-500', 'text-emerald-600'); }).catch(() => { status.textContent = "결과 저장에 실패했습니다."; status.classList.replace('text-slate-500', 'text-rose-600'); }); }
+        window.onload = () => renderMath();
     </script>
 </body>
 </html>
