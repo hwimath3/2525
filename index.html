@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>원과 직선의 극한 - 10단계 변형문제</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .progress-container {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #00f260, #0575e6);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .step-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+
+        .difficulty.easy { background: #d4edda; color: #155724; }
+        .difficulty.medium { background: #fff3cd; color: #856404; }
+        .difficulty.hard { background: #f8d7da; color: #721c24; }
+
+        .problem-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e8e8ff;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .option-label {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .solution {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f4f8;
+            border-radius: 10px;
+            border-left: 4px solid #17a2b8;
+            display: none;
+        }
+
+        .solution.show {
+            display: block;
+        }
+
+        .solution h4 {
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+
+        .result-card {
+            text-align: center;
+            display: none;
+        }
+
+        .result-card.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .score-circle span {
+            font-size: 1rem;
+        }
+
+        .result-message {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .concept-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .concept-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .quiz-card {
+                padding: 20px;
+            }
+
+            .problem-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>원과 직선의 극한</h1>
+            <p>10단계 변형문제 퀴즈</p>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar" style="width: 10%">1 / 10</div>
+        </div>
+
+        <div class="quiz-card" id="quizCard">
+            <div id="problemContainer"></div>
+            <div class="options" id="optionsContainer"></div>
+            <button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()" disabled>정답 확인</button>
+            <button class="btn btn-primary hidden" id="nextBtn" onclick="nextProblem()">다음 문제</button>
+            <div class="solution" id="solution"></div>
+        </div>
+
+        <div class="quiz-card result-card" id="resultCard">
+            <div class="score-circle">
+                <div id="finalScore">0</div>
+                <span>/ 10</span>
+            </div>
+            <div class="result-message" id="resultMessage"></div>
+            <button class="btn btn-primary" onclick="restartQuiz()">다시 풀기</button>
+        </div>
+    </div>
+
+    <script>
+        const problems = [
+            {
+                step: 1,
+                difficulty: "easy",
+                concept: "기본 개념: 원과 직선의 교점, 극한의 기초",
+                problem: `두 점 \\(A(0, t)\\) (\\(t > 0\\)), \\(B(-2, 0)\\)을 지나는 직선의 방정식을 구하시오.`,
+                options: [
+                    `\\(y = \\frac{t}{2}(x + 2)\\)`,
+                    `\\(y = \\frac{t}{2}x + t\\)`,
+                    `\\(y = \\frac{2}{t}(x + 2)\\)`,
+                    `\\(y = tx + 2t\\)`
+                ],
+                answer: 0,
+                solution: `두 점 \\(A(0, t)\\), \\(B(-2, 0)\\)을 지나는 직선의 기울기는 \\(\\frac{t - 0}{0 - (-2)} = \\frac{t}{2}\\)입니다.<br><br>점-기울기 형태로 쓰면: \\(y - 0 = \\frac{t}{2}(x - (-2))\\)<br><br>따라서 \\(y = \\frac{t}{2}(x + 2)\\)`
+            },
+            {
+                step: 2,
+                difficulty: "easy",
+                concept: "원의 방정식과 직선의 대입",
+                problem: `직선 \\(y = \\frac{t}{2}(x + 2)\\)와 원 \\(x^2 + y^2 = 4\\)의 교점을 구하기 위해 대입하면 어떤 방정식이 되는가?`,
+                options: [
+                    `\\(x^2 + \\frac{t^2}{4}(x+2)^2 = 4\\)`,
+                    `\\(x^2 + t^2(x+2)^2 = 4\\)`,
+                    `\\(x^2 + \\frac{t^2}{2}(x+2)^2 = 4\\)`,
+                    `\\((x+2)^2 + y^2 = 4\\)`
+                ],
+                answer: 0,
+                solution: `\\(y = \\frac{t}{2}(x+2)\\)를 \\(x^2 + y^2 = 4\\)에 대입하면<br><br>\\(x^2 + \\left(\\frac{t}{2}(x+2)\\right)^2 = 4\\)<br><br>\\(x^2 + \\frac{t^2}{4}(x+2)^2 = 4\\)`
+            },
+            {
+                step: 3,
+                difficulty: "medium",
+                concept: "이차방정식의 전개와 정리",
+                problem: `\\(x^2 + \\frac{t^2}{4}(x+2)^2 = 4\\)를 전개하여 정리하면?`,
+                options: [
+                    `\\((4 + t^2)x^2 + 4t^2x + 4t^2 - 16 = 0\\)`,
+                    `\\((4 + t^2)x^2 + 4t^2x + t^2 - 16 = 0\\)`,
+                    `\\((1 + t^2)x^2 + t^2x + t^2 - 4 = 0\\)`,
+                    `\\(4x^2 + t^2x^2 + 4t^2x + 4t^2 = 16\\)`
+                ],
+                answer: 0,
+                solution: `\\(x^2 + \\frac{t^2}{4}(x+2)^2 = 4\\)<br><br>양변에 4를 곱하면: \\(4x^2 + t^2(x+2)^2 = 16\\)<br><br>\\(4x^2 + t^2(x^2 + 4x + 4) = 16\\)<br><br>\\(4x^2 + t^2x^2 + 4t^2x + 4t^2 = 16\\)<br><br>\\((4 + t^2)x^2 + 4t^2x + 4t^2 - 16 = 0\\)`
+            },
+            {
+                step: 4,
+                difficulty: "medium",
+                concept: "근과 계수의 관계",
+                problem: `점 \\(B(-2, 0)\\)가 원 위의 점이므로 \\(x = -2\\)가 방정식의 한 근입니다. 다른 근 \\(x_P\\)를 근과 계수의 관계로 구하면?`,
+                options: [
+                    `\\(x_P = \\frac{4t^2 - 8 - 2t^2}{4 + t^2} = \\frac{2t^2 - 8}{4 + t^2}\\)`,
+                    `\\(x_P = \\frac{4t^2}{4 + t^2} - 2\\)`,
+                    `\\(x_P = \\frac{-4t^2 + 8}{4 + t^2}\\)`,
+                    `\\(x_P = \\frac{8 - 2t^2}{4 + t^2}\\)`
+                ],
+                answer: 3,
+                solution: `근과 계수의 관계에서 두 근의 합은 \\(-\\frac{4t^2}{4+t^2}\\)입니다.<br><br>\\((-2) + x_P = -\\frac{4t^2}{4+t^2}\\)<br><br>\\(x_P = -\\frac{4t^2}{4+t^2} + 2 = \\frac{-4t^2 + 2(4+t^2)}{4+t^2}\\)<br><br>\\(= \\frac{-4t^2 + 8 + 2t^2}{4+t^2} = \\frac{8 - 2t^2}{4+t^2}\\)`
+            },
+            {
+                step: 5,
+                difficulty: "medium",
+                concept: "점 P의 좌표 계산",
+                problem: `점 \\(P\\)의 \\(y\\) 좌표를 구하시오. (단, \\(x_P = \\frac{8-2t^2}{4+t^2}\\))`,
+                options: [
+                    `\\(y_P = \\frac{4t + t^3}{4+t^2}\\)`,
+                    `\\(y_P = \\frac{8t}{4+t^2}\\)`,
+                    `\\(y_P = \\frac{2t(4+t^2)}{4+t^2}\\)`,
+                    `\\(y_P = \\frac{t(8-2t^2)}{4+t^2}\\)`
+                ],
+                answer: 1,
+                solution: `\\(y_P = \\frac{t}{2}(x_P + 2)\\)<br><br>\\(= \\frac{t}{2}\\left(\\frac{8-2t^2}{4+t^2} + 2\\right)\\)<br><br>\\(= \\frac{t}{2} \\cdot \\frac{8-2t^2 + 2(4+t^2)}{4+t^2}\\)<br><br>\\(= \\frac{t}{2} \\cdot \\frac{8-2t^2 + 8 + 2t^2}{4+t^2}\\)<br><br>\\(= \\frac{t}{2} \\cdot \\frac{16}{4+t^2} = \\frac{8t}{4+t^2}\\)`
+            },
+            {
+                step: 6,
+                difficulty: "medium",
+                concept: "수선의 발 좌표",
+                problem: `점 \\(P\\)에서 \\(x\\)축에 내린 수선의 발 \\(H\\)의 좌표는?`,
+                options: [
+                    `\\(H\\left(\\frac{8-2t^2}{4+t^2}, \\frac{8t}{4+t^2}\\right)\\)`,
+                    `\\(H\\left(\\frac{8-2t^2}{4+t^2}, 0\\right)\\)`,
+                    `\\(H\\left(0, \\frac{8t}{4+t^2}\\right)\\)`,
+                    `\\(H(0, 0)\\)`
+                ],
+                answer: 1,
+                solution: `수선의 발 \\(H\\)는 점 \\(P\\)에서 \\(x\\)축에 수직으로 내린 점입니다.<br><br>따라서 \\(H\\)의 \\(x\\) 좌표는 \\(P\\)와 같고, \\(y\\) 좌표는 0입니다.<br><br>\\(H\\left(\\frac{8-2t^2}{4+t^2}, 0\\right)\\)`
+            },
+            {
+                step: 7,
+                difficulty: "medium",
+                concept: "길이 계산 (OA, PH)",
+                problem: `\\(\\overline{OA}\\)와 \\(\\overline{PH}\\)의 길이를 각각 구하시오.`,
+                options: [
+                    `\\(OA = t\\), \\(PH = \\frac{8t}{4+t^2}\\)`,
+                    `\\(OA = t^2\\), \\(PH = \\frac{8t^2}{4+t^2}\\)`,
+                    `\\(OA = 2t\\), \\(PH = \\frac{4t}{4+t^2}\\)`,
+                    `\\(OA = t\\), \\(PH = \\frac{8}{4+t^2}\\)`
+                ],
+                answer: 0,
+                solution: `\\(\\overline{OA}\\)는 원점 \\(O(0,0)\\)에서 \\(A(0,t)\\)까지의 거리이므로 \\(OA = t\\)입니다.<br><br>\\(\\overline{PH}\\)는 \\(P\\)에서 \\(x\\)축까지의 거리, 즉 \\(P\\)의 \\(y\\) 좌표의 절댓값입니다.<br><br>\\(t > 0\\)일 때 \\(y_P > 0\\)이므로 \\(PH = \\frac{8t}{4+t^2}\\)`
+            },
+            {
+                step: 8,
+                difficulty: "hard",
+                concept: "곱의 계산",
+                problem: `\\(\\overline{OA} \\cdot \\overline{PH}\\)를 계산하시오.`,
+                options: [
+                    `\\(\\frac{8t^2}{4+t^2}\\)`,
+                    `\\(\\frac{8t}{4+t^2}\\)`,
+                    `\\(\\frac{4t^2}{4+t^2}\\)`,
+                    `\\(\\frac{16t^2}{4+t^2}\\)`
+                ],
+                answer: 0,
+                solution: `\\(\\overline{OA} \\cdot \\overline{PH} = t \\cdot \\frac{8t}{4+t^2} = \\frac{8t^2}{4+t^2}\\)`
+            },
+            {
+                step: 9,
+                difficulty: "hard",
+                concept: "극한 계산 준비",
+                problem: `\\(\\frac{8t^2}{4+t^2}\\)를 \\(t \\to \\infty\\)일 때 계산하기 위해 분자, 분모를 \\(t^2\\)으로 나누면?`,
+                options: [
+                    `\\(\\frac{8}{\\frac{4}{t^2}+1}\\)`,
+                    `\\(\\frac{8}{4+t^2}\\)`,
+                    `\\(\\frac{8t^2}{4}\\)`,
+                    `\\(\\frac{8}{t^2+4}\\)`
+                ],
+                answer: 0,
+                solution: `\\(\\frac{8t^2}{4+t^2} = \\frac{\\frac{8t^2}{t^2}}{\\frac{4+t^2}{t^2}} = \\frac{8}{\\frac{4}{t^2}+1}\\)`
+            },
+            {
+                step: 10,
+                difficulty: "hard",
+                concept: "극한값 계산",
+                problem: `\\(\\displaystyle\\lim_{t \\to \\infty} \\overline{OA} \\cdot \\overline{PH}\\)의 값은?`,
+                options: [
+                    `4`,
+                    `8`,
+                    `2`,
+                    `16`
+                ],
+                answer: 1,
+                solution: `\\(\\displaystyle\\lim_{t \\to \\infty} \\frac{8t^2}{4+t^2} = \\lim_{t \\to \\infty} \\frac{8}{\\frac{4}{t^2}+1}\\)<br><br>\\(t \\to \\infty\\)일 때 \\(\\frac{4}{t^2} \\to 0\\)이므로<br><br>\\(= \\frac{8}{0+1} = 8\\)<br><br><strong>정답: 8</strong>`
+            }
+        ];
+
+        let currentProblem = 0;
+        let score = 0;
+        let selectedOption = null;
+
+        function renderProblem() {
+            const problem = problems[currentProblem];
+            const container = document.getElementById('problemContainer');
+            const optionsContainer = document.getElementById('optionsContainer');
+
+            container.innerHTML = `
+                <span class="step-badge">STEP ${problem.step}</span>
+                <span class="difficulty ${problem.difficulty}">${problem.difficulty === 'easy' ? '기초' : problem.difficulty === 'medium' ? '보통' : '심화'}</span>
+                <div class="concept-box">
+                    <h4>핵심 개념</h4>
+                    <p>${problem.concept}</p>
+                </div>
+                <div class="problem-text">${problem.problem}</div>
+            `;
+
+            optionsContainer.innerHTML = problem.options.map((opt, idx) => `
+                <div class="option" onclick="selectOption(${idx})" id="option${idx}">
+                    <span class="option-label">${idx + 1}</span>
+                    <span>${opt}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').classList.remove('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('solution').classList.remove('show');
+            selectedOption = null;
+
+            // Re-render MathJax
+            MathJax.typesetPromise();
+        }
+
+        function selectOption(idx) {
+            if (document.getElementById('solution').classList.contains('show')) return;
+
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById(`option${idx}`).classList.add('selected');
+            selectedOption = idx;
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function checkAnswer() {
+            const problem = problems[currentProblem];
+            const isCorrect = selectedOption === problem.answer;
+
+            document.querySelectorAll('.option').forEach((opt, idx) => {
+                if (idx === problem.answer) {
+                    opt.classList.add('correct');
+                } else if (idx === selectedOption && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) score++;
+
+            document.getElementById('solution').innerHTML = `
+                <h4>${isCorrect ? '정답입니다!' : '오답입니다.'}</h4>
+                <p>${problem.solution}</p>
+            `;
+            document.getElementById('solution').classList.add('show');
+
+            document.getElementById('submitBtn').classList.add('hidden');
+            document.getElementById('nextBtn').classList.remove('hidden');
+
+            if (currentProblem === problems.length - 1) {
+                document.getElementById('nextBtn').textContent = '결과 보기';
+            }
+
+            MathJax.typesetPromise();
+        }
+
+        function nextProblem() {
+            currentProblem++;
+
+            if (currentProblem >= problems.length) {
+                showResult();
+                return;
+            }
+
+            document.getElementById('progressBar').style.width = `${(currentProblem + 1) * 10}%`;
+            document.getElementById('progressBar').textContent = `${currentProblem + 1} / 10`;
+
+            renderProblem();
+        }
+
+        function showResult() {
+            document.getElementById('quizCard').style.display = 'none';
+            document.getElementById('resultCard').classList.add('show');
+            document.getElementById('finalScore').textContent = score;
+
+            let message = '';
+            if (score === 10) message = '완벽합니다! 극한과 도형 문제의 달인이시네요!';
+            else if (score >= 8) message = '훌륭합니다! 개념을 잘 이해하고 계시네요.';
+            else if (score >= 6) message = '좋습니다! 조금만 더 연습하면 완벽해질 거예요.';
+            else if (score >= 4) message = '기초 개념을 다시 복습해보세요.';
+            else message = '개념 정리가 필요합니다. 차근차근 다시 공부해봐요!';
+
+            document.getElementById('resultMessage').textContent = message;
+        }
+
+        function restartQuiz() {
+            currentProblem = 0;
+            score = 0;
+            document.getElementById('quizCard').style.display = 'block';
+            document.getElementById('resultCard').classList.remove('show');
+            document.getElementById('progressBar').style.width = '10%';
+            document.getElementById('progressBar').textContent = '1 / 10';
+            document.getElementById('nextBtn').textContent = '다음 문제';
+            renderProblem();
+        }
+
+        // Initialize
+        renderProblem();
+    </script>
+</body>
+</html>
